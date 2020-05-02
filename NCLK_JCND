@@ -3,8 +3,8 @@ function [JMP_FLG,t_j,x_j] = NCLK_JCND(t,x,C)
 % Compute dynamical jump condition, and step back to last valid sample (pre-jump). Returns
 % command to jump on next iteration and time/state vectors if jump is required.
 
-% Evaluate jump condition for each time-step
-JMP_t_i = find(sum((x > 1)),1);  % Find first column where a clock crosses 1
+
+JMP_t_i = find(sum((x > 1)),1);             % Find first column where a clock crosses 1
 
 if(~isempty(JMP_t_i))
     JMP_FLG = find(x(:,JMP_t_i) > 1);       % Store clocks rolling over
