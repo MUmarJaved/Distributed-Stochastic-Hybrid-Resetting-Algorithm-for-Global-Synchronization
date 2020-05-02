@@ -3,7 +3,8 @@
 %Updated (30 Apr. 2020)
 
 clc;clear all;close all;
-%% Housekeeping     
+%% Housekeeping   
+p                           = 0.5;             % Edge probability
 D                           = 100;             % Number of samples
 collect_mean_sample_time    = 0;               % collects mean sample time
 K                           = [10:10:250];           % Number of agents
@@ -54,7 +55,7 @@ for  k= K                                      % for each agent
             x(:,n)  = x_o(:,end);
             end
         else
-        x(:,n)  = NCLK_DDyn(t(n-1),x(:,n-1),JMP_FLG,C,digraph);% Update jump state
+        x(:,n)  = NCLK_DDyn(t(n-1),x(:,n-1),JMP_FLG,C,digraph,p);% Update jump state
         t(n)    = t(n-1);            	               % Jump is instantaneous
         JMP_FLG = zeros(C.N_CLK,1);                     % Set flag low
         end
