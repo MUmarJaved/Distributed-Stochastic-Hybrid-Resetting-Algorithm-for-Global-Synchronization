@@ -1,0 +1,3 @@
+function x_dot = NCLK_CDyn(t,x,C)
+x_dot = ones(C.N_CLK,1);
+end
