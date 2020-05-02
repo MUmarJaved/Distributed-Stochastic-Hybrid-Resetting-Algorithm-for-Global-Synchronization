@@ -8,6 +8,10 @@ Description :
 
 SHDS_main - Specifies network parameters and runs the stochastic hybrid dynamics.
 
-NCLK_CDyn - Specifies the Continuous time dynamics.
+NCLK_CDyn - Specifies the Determinsitic, Continuous time dynamics.
 
 NCLK_DDyn - Specifies the Stochatic, Discrete time dynamics.
+
+NCLK_JCND - Indentify the transition to Stochastic, Discrete time dynamics from  Determinsitic,               Continuous time dynamics
+
+
