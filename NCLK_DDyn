@@ -1,7 +1,7 @@
 function x_np1 = NCLK_DDyn(t_n,x_n,i_jmp,C,digraph)
 
 p=0.5;
-% Reset incrementing clocks to zero:
+
 x_np1 = x_n;                                   % Set Initial condition
 
 vector= 1:C.N_CLK ;                               %update check order
