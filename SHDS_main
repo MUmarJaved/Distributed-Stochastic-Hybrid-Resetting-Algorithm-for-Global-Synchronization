@@ -1,0 +1,92 @@
+%Muhammad Umar Javed (15 Nov, 2019).
+%Updated (25 Apr. 2020)
+%Thanks to Thomas Dearing for his suggestions. 
+clc;clear all;close all;
+%% Housekeeping     
+D                           = 100;             % Number of samples
+collect_mean_sample_time    = 0;               % collects mean sample time
+K                           = [10:10:250];           % Number of agents
+collect_all_times           = zeros(D, length(K));
+dt                          = 0.1;             % Integration increment
+prompt                      = 'What digraph?\nPress 0 for path digraph\nPress 1 for cyclic digraph\nPress 2 for complete digraph \n';
+digraph                     = input(prompt);
+agent_index                 = 0;
+for  k= K                                      % for each agent
+    agent_index = agent_index+1;
+    C.r         = rand(k);                     % Per/clk adj parameter
+    mean_sample_time=0;                        % initialize mean_sample time to zero
+    for i=1:D                                  % for each initial condition
+    i,k
+    T       = 1000;                              % Initial Simulation Runtime
+    N       = ceil(T./dt);                     % Initialize the vector length 
+    n       = 2;                               % initialize index for time increment 
+    C.N_CLK = k;                               % Number of clocks
+    if digraph==0
+        C.IA    = ([1, (1:C.N_CLK-1)]); 
+    elseif digraph==1
+        C.IA   = ([C.N_CLK,(1:C.N_CLK-1)]);       %  (Cyclic graph)
+    elseif digraph==2
+        C.IA=1:C.N_CLK ;
+    else
+         disp('option not available'); exit;    
+    end
+    t_0     = 0;                               % Time IC
+    x_0     = rand(1,C.N_CLK);                 % Random Clock initial condition
+    t       = zeros(1,N)*NaN;                  % Initial time vector
+    x       = zeros(C.N_CLK,N)*NaN;            % Initial State vector
+    t(1)    = t_0;                             % Store time IC
+    x(:,1)  = x_0;                             % Store state IC
+    EXT_FLG = 0;                               % Exit loop flag
+    JMP_FLG = 0;                               % Jump condition (No jump)
+    while(~EXT_FLG) 
+        if(~JMP_FLG)
+        % Simulate Continuous Dynamics for one dt
+        [t_o,x_o]=ode45(@(t,x) NCLK_CDyn(t,x,C), (t(n-1)+[0,dt]), x(:,n-1));  % Flow map
+        x_o = x_o'; t_o = t_o';
+        % Evaluate Jump condition, and step back if found
+        [JMP_FLG,t_j,x_j] = NCLK_JCND(t_o,x_o,C);                             % Jump Condition??
+            if(sum(JMP_FLG))                                                  % If any clock is one!
+            t(n)    = t_j;                                                    % Return to the last state 
+            x(:,n)  = x_j;                                              
+            else
+            t(n)    = t(n-1) + dt;                                            % Normal step 
+            x(:,n)  = x_o(:,end);
+            end
+        else
+        x(:,n)  = NCLK_DDyn(t(n-1),x(:,n-1),JMP_FLG,C,digraph);% Update jump state
+        t(n)    = t(n-1);            	               % Jump is instantaneous
+        JMP_FLG = zeros(C.N_CLK,1);                     % Set flag low
+        end
+    
+        if(t(n) >= T)                               % Simulation length reached
+        T=T+100;
+        N=ceil(100./dt);
+        t=[t zeros(1,N).*NaN];
+        x=[x zeros(C.N_CLK,N).*NaN];
+        end
+        
+        n = n + 1;              % Update simulation increment %C.N_CLK*0.01*dt
+      
+        if abs(x_o(:,end)-circshift(x_o(:,end),1))<=0.001
+        EXT_FLG = 1;
+        end  
+    end
+
+
+% Crop vectors to final length
+    IDX = ~isnan(t);
+    t   = t(IDX);
+    x   = x(:,IDX);
+    mean_sample_time=mean_sample_time+t(end);
+    collect_all_times(i,agent_index)=t(end);
+    end
+collect_mean_sample_time=[collect_mean_sample_time mean_sample_time];
+end
+collect_mean_sample_time=(collect_mean_sample_time(2:end)./D);
+collect_mean_sample_time_log=log(collect_mean_sample_time).^(1/3);
+
+
+figure
+plot(K,collect_all_times,'x','linewidth',10);hold on;
+plot(K,collect_mean_sample_time,'-s','MarkerSize',15, 'MarkerEdgeColor','red','MarkerFaceColor','red','linewidth',1)
+set(gca,'fontsize',30)
