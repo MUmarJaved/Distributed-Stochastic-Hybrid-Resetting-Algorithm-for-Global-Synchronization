@@ -15,3 +15,4 @@ NCLK_DDyn - Specifies the Stochatic, Discrete time dynamics.
 NCLK_JCND - Indentify the transition to Stochastic, Discrete time dynamics from  Determinsitic,               Continuous time dynamics
 
 
+
