@@ -1,0 +1,78 @@
+function x_np1 = NCLK_DDyn(t_n,x_n,i_jmp,C,digraph)
+
+p=0.5;
+% Reset incrementing clocks to zero:
+x_np1 = x_n;                                   % Set Initial condition
+
+vector= 1:C.N_CLK ;                               %update check order
+shuffle_vector =vector(randperm(length(vector))) ;              
+for i = shuffle_vector
+    if(sum(i == i_jmp))         % Element is in jump reset set
+        x_np1(i)= 0;            % Reset clock
+        
+        
+     if digraph==0           %% line digraph
+         j_i = C.IA(i);      % Determine Listener for clock i
+            if i~=1
+                nu1   = rand;
+                if nu1>=p
+                    nu=1;
+                else
+                    nu=0;
+                end
+            
+        % Adjust clock j based on its current state
+                if (x_n(j_i) > C.r(j_i) && nu==1)
+                x_np1(j_i) = 1;
+                elseif (x_n(j_i) <= C.r(j_i) && nu==1)
+                x_np1(j_i) = 0;
+                else
+                x_np1(j_i) = x_np1(j_i);
+                end
+            end
+            
+     elseif digraph==1          %% cyclic digraph
+            j_i = C.IA(i);      
+                nu1   = rand;
+                if nu1>=p
+                    nu=1;
+                else
+                    nu=0;
+                end
+            
+    
+                if (x_n(j_i) > C.r(j_i) && nu==1)
+                x_np1(j_i) = 1;
+                elseif (x_n(j_i) <= C.r(j_i) && nu==1)
+                x_np1(j_i) = 0;
+                else
+                x_np1(j_i) = x_np1(j_i);
+                end
+                
+          elseif digraph==2    %% complete digraph  
+            for j_i = C.IA  
+                if j_i~=i
+                    nu1   = rand;
+                    if nu1>=p
+                    nu=1;
+                    else
+                    nu=0;
+                    end
+            
+      
+                    if (x_n(j_i) > C.r(j_i) && nu==1)
+                    x_np1(j_i) = 1;
+                    elseif (x_n(j_i) <= C.r(j_i) && nu==1)
+                    x_np1(j_i) = 0;
+                    else
+                    x_np1(j_i) = x_np1(j_i);
+                    end 
+                end
+            end   
+                
+     end    
+     
+    end
+end
+
+end
