@@ -6,6 +6,6 @@ Requirements: MATLAB.
 
 Description : 
 
-SHDS_main - Specifies network parameters and implement the dynamics.
+SHDS_main - Specifies network parameters and runs the stochastic hybrid dynamics.
 NCLK_CDyn - Specifies the Continuous time dynamics.
 
