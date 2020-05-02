@@ -7,4 +7,5 @@ Requirements: MATLAB.
 Description : 
 
 SHDS_main - Specifies network parameters and implement the dynamics.
+NCLK_CDyn - Specifies the Continuous time dynamics.
 
