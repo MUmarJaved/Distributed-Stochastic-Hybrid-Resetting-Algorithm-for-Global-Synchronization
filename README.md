@@ -8,7 +8,7 @@ Description :
 
 AlgorithmDescription.pdf - Provides overview of our algorithm.
 
-SHDS_main - Specifies network parameters and runs the stochastic hybrid dynamics.
+SHDS_main - Specifies network parameters and runs the stochastic hybrid dynamics to compute first hitting times.
 
 NCLK_CDyn - Specifies the Determinsitic, Continuous time dynamics.
 
